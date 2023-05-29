@@ -13,30 +13,33 @@ datasource db {
 model Org {
   id            String @id @default(uuid())
   name          String
-  login         String @unique
+  email         String @unique
   password_hash String
   whatsapp      String
 
-  createdAt DateTime @default(now())
+  created_at DateTime @default(now())
 
-  pets    Pet[]
-  address Address[]
+  address    Address? @relation(fields: [address_id], references: [id])
+  address_id String?
+
+  pets Pet[]
 
   @@map("orgs")
 }
 
 model Address {
-  id      String @id @default(uuid())
-  street  String
-  number  String
-  city    String
-  state   String
-  zipcode String
+  id         String  @id @default(uuid())
+  street     String
+  number     String
+  city       String
+  state      String
+  zipcode    String
+  complement String?
 
-  org   Org    @relation(fields: [orgId], references: [id])
-  orgId String
+  created_at DateTime @default(now())
 
-  createdAt DateTime @default(now())
+  org_id String
+  org    Org[]
 
   @@map("addresses")
 }
@@ -49,10 +52,10 @@ model Pet {
 
   adopted Boolean @default(false)
 
-  org   Org    @relation(fields: [orgId], references: [id])
-  orgId String
+  created_at DateTime @default(now())
 
-  createdAt DateTime @default(now())
+  org    Org?    @relation(fields: [org_id], references: [id])
+  org_id String?
 
   @@map("pets")
 }
