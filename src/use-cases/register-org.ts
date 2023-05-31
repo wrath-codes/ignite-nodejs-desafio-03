@@ -1,8 +1,8 @@
-import { InMemoryOrgsRepository } from './../repositories/in-memory/in-memory-orgs-repository'
 import { hash } from 'bcryptjs'
 import { Org } from '@prisma/client'
-import { InMemoryAddressesRepository } from '@/repositories/in-memory/in-memory-addresses-repository'
 import { OrgAlreadyExistsError } from './errors/org-already-exists'
+import { OrgsRepository } from '@/repositories/interfaces/orgs-repository'
+import { AddressesRepository } from '@/repositories/interfaces/addresses-repository'
 
 interface RegisterOrgRequest {
   org: {
@@ -27,8 +27,8 @@ interface RegisterOrgResponse {
 
 export class RegisterOrgUseCase {
   constructor(
-    private orgsRepository: InMemoryOrgsRepository,
-    private addressesRepository: InMemoryAddressesRepository,
+    private orgsRepository: OrgsRepository,
+    private addressesRepository: AddressesRepository,
   ) {}
 
   async execute({

@@ -1,7 +1,7 @@
-import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets-repository'
 import { Pet } from '@prisma/client'
-import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-repository'
 import { OrgNotFoundError } from './errors/org-not-found-error'
+import { PetsRepository } from '@/repositories/interfaces/pets-repository'
+import { OrgsRepository } from '@/repositories/interfaces/orgs-repository'
 
 interface RegisterPetRequest {
   pet: {
@@ -18,8 +18,8 @@ interface RegisterPetResponse {
 
 export class RegisterPetUseCase {
   constructor(
-    private petsRepository: InMemoryPetsRepository,
-    private orgsRepository: InMemoryOrgsRepository,
+    private petsRepository: PetsRepository,
+    private orgsRepository: OrgsRepository,
   ) {}
 
   async execute({ pet }: RegisterPetRequest): Promise<RegisterPetResponse> {
