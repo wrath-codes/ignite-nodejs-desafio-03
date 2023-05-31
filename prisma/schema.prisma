@@ -45,11 +45,10 @@ model Address {
 }
 
 model Pet {
-  id      String @id @default(uuid())
+  id      String  @id @default(uuid())
   name    String
-  species String
+  age     Int
   breed   String
-
   adopted Boolean @default(false)
 
   created_at DateTime @default(now())
