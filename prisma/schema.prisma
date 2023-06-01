@@ -44,11 +44,60 @@ model Address {
   @@map("addresses")
 }
 
+enum PetAge {
+  BABY
+  YOUNG
+  ADULT
+  SENIOR
+}
+
+enum PetSize {
+  SMALL
+  MEDIUM
+  LARGE
+  EXTRA_LARGE
+}
+
+enum PetEnergy {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum PetIndependence {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum PetEnvironment {
+  INDOOR
+  OUTDOOR
+  BOTH
+}
+
+model PetRequirement {
+  id          String @id @default(uuid())
+  requirement String
+
+  Pet    Pet?    @relation(fields: [pet_id], references: [id])
+  pet_id String?
+
+  @@map("pet_requirements")
+}
+
 model Pet {
-  id      String  @id @default(uuid())
-  name    String
-  age     Int
-  breed   String
+  id           String          @id @default(uuid())
+  name         String
+  about        String
+  age          PetAge          @default(BABY)
+  size         PetSize         @default(SMALL)
+  energy       PetEnergy       @default(LOW)
+  independence PetIndependence @default(LOW)
+  environment  PetEnvironment  @default(OUTDOOR)
+
+  requirements PetRequirement[]
+
   adopted Boolean @default(false)
 
   created_at DateTime @default(now())
