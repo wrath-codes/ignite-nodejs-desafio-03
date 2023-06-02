@@ -24,6 +24,7 @@ export default <Environment>{
     const schema = randomUUID()
     // eslint-disable-next-line no-unused-vars
     const databaseURL = generateDatabaseURL(schema)
+    console.log(databaseURL)
     process.env.DATABASE_URL = databaseURL
 
     execSync('npx prisma migrate deploy')
