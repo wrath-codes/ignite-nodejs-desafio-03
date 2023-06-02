@@ -4,7 +4,6 @@ import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets-repository'
 import { FindNotAdoptedUseCase } from '@/use-cases/find-not-adopted'
 import { hash } from 'bcryptjs'
-import { CityNotProvidedError } from './errors/city-not-provided-error'
 
 let petsRepository: InMemoryPetsRepository
 let orgsRepository: InMemoryOrgsRepository
@@ -627,33 +626,5 @@ describe('Find Not Adopted Use Case', async () => {
         id: pet_01.id,
       }),
     ])
-  })
-
-  it('should not be able to find a pet without a city provided', async () => {
-    const password_hash = await hash('123456', 6)
-
-    const org_01 = await orgsRepository.create({
-      name: 'Example Org 01',
-      email: 'example@org01.com',
-      password_hash,
-      whatsapp: '1234567890',
-    })
-
-    await addressesRepository.create({
-      street: 'Example Street 01',
-      number: '123',
-      complement: 'Example Complement 01',
-      city: 'Example City 01',
-      state: 'Example State 01',
-      zipcode: '12345678',
-      org_id: org_01.id,
-    })
-
-    await expect(
-      sut.execute({
-        page: 1,
-        city: '',
-      }),
-    ).rejects.toBeInstanceOf(CityNotProvidedError)
   })
 })

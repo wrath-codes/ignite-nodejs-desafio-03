@@ -55,10 +55,6 @@ export class RegisterPetUseCase {
       org_id: pet.org_id,
     })
 
-    if (!createdPet) {
-      throw new Error('Error creating pet')
-    }
-
     if (!pet.requirements) {
       return {
         pet: createdPet,

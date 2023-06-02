@@ -60,9 +60,10 @@ export class PrismaPetsRepository implements PetsRepository {
         energy: energy as PetEnergy,
         independence: independence as PetIndependence,
         environment: environment as PetEnvironment,
-        adopted: false,
-        org_id: {
-          in: org_list?.map((org) => org.id),
+        org: {
+          id: {
+            in: org_list?.map((org) => org.id),
+          },
         },
       },
       skip: (page - 1) * 20,

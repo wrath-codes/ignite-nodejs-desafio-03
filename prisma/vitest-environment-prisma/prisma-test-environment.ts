@@ -12,7 +12,17 @@ function generateDatabaseURL(schema: string) {
     throw new Error('Please provide a DATABASE_URL env variable')
   }
 
-  const url = new URL(process.env.DATABASE_URL)
+  const {
+    DATABASE_HOST,
+    DATABASE_USER,
+    DATABASE_PASS,
+    DATABASE_PORT,
+    DATABASE_NAME,
+  } = process.env
+
+  const url = new URL(
+    `postgresql://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`,
+  )
 
   url.searchParams.set('schema', schema)
 
@@ -24,7 +34,6 @@ export default <Environment>{
     const schema = randomUUID()
     // eslint-disable-next-line no-unused-vars
     const databaseURL = generateDatabaseURL(schema)
-    console.log(databaseURL)
     process.env.DATABASE_URL = databaseURL
 
     execSync('npx prisma migrate deploy')
