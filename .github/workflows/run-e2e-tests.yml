@@ -27,4 +27,9 @@ jobs:
       - run: npm run test:e2e
         env:
           JWT_SECRET: testing
-          DATABASE_URL: 'postgresql://docker:docker@localhost:5432/ignitenode03?schema=public'
+          DATABASE_HOST: localhost
+          DATABASE_PORT: 5432
+          DATABASE_USER: docker
+          DATABASE_PASS: docker
+          DATABASE_NAME: ignitenode03
+          DATABASE_URL: 'postgresql://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}'
