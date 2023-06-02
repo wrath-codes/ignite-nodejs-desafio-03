@@ -5,18 +5,26 @@ import { randomUUID } from 'node:crypto'
 export class InMemoryPetsRepository implements PetsRepository {
   public items: Pet[] = []
 
-  async create(data: Prisma.PetUncheckedCreateInput): Promise<Pet> {
-    const pet = {
-      ...data,
-      id: randomUUID(),
-      created_at: new Date(),
-      org_id: data.org_id as string,
+  async create(
+    pet: Prisma.PetUncheckedCreateWithoutRequirementsInput,
+  ): Promise<Pet> {
+    const createdPet = {
+      id: pet.id || randomUUID(),
+      name: pet.name,
+      age: pet.age!,
+      about: pet.about,
+      size: pet.size!,
+      energy: pet.energy!,
+      independence: pet.independence!,
+      environment: pet.environment!,
+      org_id: pet.org_id!,
       adopted: false,
+      created_at: new Date(),
     }
 
-    this.items.push(pet)
+    this.items.push(createdPet)
 
-    return pet
+    return createdPet
   }
 
   async findById(id: string): Promise<Pet | null> {
@@ -32,60 +40,44 @@ export class InMemoryPetsRepository implements PetsRepository {
   async findPets(
     page: number,
     org_list: Org[],
-    breed?: string,
-    age?: number,
+    age?: string | undefined,
+    size?: string | undefined,
+    energy?: string | undefined,
+    independence?: string | undefined,
+    environment?: string | undefined,
   ): Promise<Pet[]> {
     const pets = []
-    if (!breed && !age) {
-      for (const org of org_list) {
-        const org_pets = this.items
-          .filter((item) => item.org_id === org.id && item.adopted === false)
-          .slice((page - 1) * 20, page * 20)
-        pets.push(...org_pets)
-      }
-    } else if (breed && !age) {
-      for (const org of org_list) {
-        const org_pets = this.items
-          .filter(
-            (item) =>
-              item.org_id === org.id &&
-              item.breed === breed &&
-              item.adopted === false,
-          )
-          .slice((page - 1) * 20, page * 20)
-        pets.push(...org_pets)
-      }
-    } else if (!breed && age) {
-      for (const org of org_list) {
-        const org_pets = this.items
-          .filter(
-            (item) =>
-              item.org_id === org.id &&
-              item.age === age &&
-              item.adopted === false,
-          )
-          .slice((page - 1) * 20, page * 20)
-        pets.push(...org_pets)
-      }
-    } else {
-      for (const org of org_list) {
-        const org_pets = this.items
-          .filter(
-            (item) =>
-              item.org_id === org.id &&
-              item.breed === breed &&
-              item.age === age &&
-              item.adopted === false,
-          )
-          .slice((page - 1) * 20, page * 20)
-        pets.push(...org_pets)
-      }
+
+    for (const org of org_list) {
+      const orgPets = this.items.filter((item) => item.org_id === org.id)
+      pets.push(...orgPets)
     }
 
-    if (pets.length === 0) {
+    const petsFiltered = pets.filter((pet) => {
+      if (age && pet.age !== age) {
+        return false
+      }
+      if (size && pet.size !== size) {
+        return false
+      }
+      if (energy && pet.energy !== energy) {
+        return false
+      }
+      if (independence && pet.independence !== independence) {
+        return false
+      }
+      if (environment && pet.environment !== environment) {
+        return false
+      }
+      return true
+    })
+
+    const petsSliced = petsFiltered.slice((page - 1) * 20, page * 20)
+
+    if (petsSliced.length === 0) {
       return []
     }
 
-    return pets
+    return petsSliced
   }
 }

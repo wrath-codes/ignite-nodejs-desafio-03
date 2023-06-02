@@ -1,4 +1,13 @@
-import { Prisma, Pet, Org } from '@prisma/client'
+import {
+  Prisma,
+  Pet,
+  Org,
+  PetAge,
+  PetSize,
+  PetEnergy,
+  PetIndependence,
+  PetEnvironment,
+} from '@prisma/client'
 import { PetsRepository } from '../interfaces/pets-repository'
 import { prisma } from '@/lib/prisma'
 
@@ -7,8 +16,12 @@ export class PrismaPetsRepository implements PetsRepository {
     const pet = await prisma.pet.create({
       data: {
         name: data.name,
-        breed: data.breed,
+        about: data.about,
         age: data.age,
+        size: data.size,
+        energy: data.energy,
+        independence: data.independence,
+        environment: data.environment,
         adopted: false,
         org_id: data.org_id as string,
       },
@@ -34,13 +47,19 @@ export class PrismaPetsRepository implements PetsRepository {
   async findPets(
     page: number,
     org_list?: Org[],
-    breed?: string,
-    age?: number,
+    age?: string | undefined,
+    size?: string | undefined,
+    energy?: string | undefined,
+    independence?: string | undefined,
+    environment?: string | undefined,
   ): Promise<Pet[]> {
     const pets = await prisma.pet.findMany({
       where: {
-        breed,
-        age,
+        age: age as PetAge,
+        size: size as PetSize,
+        energy: energy as PetEnergy,
+        independence: independence as PetIndependence,
+        environment: environment as PetEnvironment,
         adopted: false,
         org_id: {
           in: org_list?.map((org) => org.id),
