@@ -20,7 +20,7 @@
 
 
 ## RNF's (Requisitos nao-funcionais)
-- [ ] O usuário que quer adotar, entrará em contato com a ORG via WhatsApp
+- [x] O usuário que quer adotar, entrará em contato com a ORG via WhatsApp
 - [x] A senha de uma org deve ser criptografada
 - [x] Todas as listagens devem ser paginadas com 20 itens por página
 
